@@ -3,8 +3,8 @@ import React from 'react';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p className='text-orange-500'> One!t </p>
+      <header className="bg-black flex justify-center">
+        <h2 className='text-white text-3xl font-Bayon'> One!t </h2>
       </header>
     </div>
   );
