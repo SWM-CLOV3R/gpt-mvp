@@ -1,11 +1,13 @@
 import { useAtom } from 'jotai'
-import { answers, mockQuestions, page, question } from '../atoms'
+import { answers, mockQuestions, question } from '../atoms'
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Quiz = () => {
     const [questions] = useAtom(mockQuestions)
-    const [_, setCurrentPage] = useAtom(page)
     const [currentQuestion, setCurrentQuestion] = useAtom(question)
     const [userAnswers, setUserAnswers] = useAtom(answers)
+    const navigate = useNavigate();
+    const { chatID } = useParams()
 
     const handleAnswerClick = (index:number) => {
         setUserAnswers([...userAnswers, {question: currentQuestion, answer: index}])   
@@ -13,7 +15,7 @@ const Quiz = () => {
         if (currentQuestion < questions.length - 1) {
             setCurrentQuestion((prev) => prev + 1)
         }else{
-            setCurrentPage("result")
+            navigate(`/result/${chatID}`);
         }
     }
 

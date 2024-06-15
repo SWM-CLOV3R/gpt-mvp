@@ -1,14 +1,14 @@
 import { useAtom } from 'jotai'
-import React from 'react'
-import { answers, page, question } from '../atoms'
+import { answers, question } from '../atoms'
+import { useNavigate } from 'react-router-dom';
 
 const Results = () => {
-    const [currentPage, setCurrentPage] = useAtom(page)
     const [_,setCurrentQuestion] = useAtom(question)
     const [userAnswers, setUserAnswers] = useAtom(answers)
+    const navigate = useNavigate();
 
     const handleRetry = () => {
-        setCurrentPage("main")
+        navigate('/');
         console.log(userAnswers);
         
         setCurrentQuestion(0)
