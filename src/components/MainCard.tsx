@@ -1,8 +1,7 @@
-import { useAtom } from 'jotai'
-import { page } from '../atoms';
 import Gift from '../images/giftbox.png'
 import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
+import { Button } from './ui/button';
 
 const MainCard = () => {
     const navigate = useNavigate();
@@ -20,9 +19,9 @@ const MainCard = () => {
                 <img src={Gift} alt='gift-box' className='w-[50%]'></img>
             </div>
             <div className='justify-end flex m-1'>
-                <button onClick={handleStart} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Start
-                </button>
+                <Button onClick={handleStart} className="text-lg">
+                    시작하기
+                </Button>
             </div>
         </div>
     )

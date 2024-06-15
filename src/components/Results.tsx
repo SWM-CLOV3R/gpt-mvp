@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai'
 import { answers, question } from '../atoms'
 import { useNavigate } from 'react-router-dom';
+import { Button } from './ui/button';
 
 const Results = () => {
     const [_,setCurrentQuestion] = useAtom(question)
@@ -23,9 +24,9 @@ const Results = () => {
                 추천 선물
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">구매하러 가기</p>
-            <button onClick={handleRetry} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+            <Button onClick={handleRetry} className=" w-full">
                 다른 선물 찾기
-            </button>
+            </Button>
         </div>
     )
 }
