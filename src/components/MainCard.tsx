@@ -9,17 +9,23 @@ import { Slider } from './ui/slider';
 import { useState } from 'react';
 import { Input } from './ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
+import { useAtom } from 'jotai';
+import { occasion, priceRange, toWho } from '../atoms';
 
 const MainCard = () => {
     const navigate = useNavigate();
-    const [price, setPrice] = useState<number[]>([0, 200000])
+    const [price, setPrice] = useAtom<number[]>(priceRange)
     const [showModal, setShowModal] = useState(false)
+    const [userToWho, setUserToWho] = useAtom(toWho)
+    const [userOccasion, setUserOccasion] = useAtom(occasion)
 
     const handleStart = () => {
         const chatID = nanoid(10);
         set(ref(db, `chats/${chatID}`), {
-            "messages": `test-${chatID}`,
             chatID,
+            towho: userToWho,
+            occasion: userOccasion,
+            priceRange: price
         });
         navigate(`/quiz/${chatID}`);
     }
@@ -46,7 +52,7 @@ const MainCard = () => {
                 <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div className="flex items-center gap-2 justify-around">
-                    <Select>
+                    <Select onValueChange={setUserToWho} value={userToWho}>
                     <SelectTrigger className="w-[35%]">
                         <SelectValue placeholder="누구" />
                     </SelectTrigger>
@@ -62,15 +68,15 @@ const MainCard = () => {
                     </SelectContent>
                     </Select>
                     <p className="text-gray-500 dark:text-gray-400">에게</p>
-                    <Select>
+                    <Select onValueChange={setUserOccasion} value={userOccasion}>
                     <SelectTrigger className="w-[35%]">
                         <SelectValue placeholder="무슨 선물을" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectGroup>
-                        <SelectItem value="생일 선물">생일 선물</SelectItem>
+                        <SelectGroup >
+                        <SelectItem value="생일">생일</SelectItem>
                         <SelectItem value="기념일">기념일</SelectItem>
-                        <SelectItem value="졸업 축하">졸업 축하</SelectItem>
+                        <SelectItem value="졸업 축하">졸업</SelectItem>
                         <SelectItem value="응원">응원</SelectItem>
                         <SelectItem value="기타">기타</SelectItem>
                         </SelectGroup>
@@ -89,9 +95,9 @@ const MainCard = () => {
                     />
                     <div className='flex justify-end align-middle'>
                         <div className="flex justify-around text-sm text-gray-500 dark:text-gray-400">
-                            <Input value={price[0]} onChange={(e)=>setPrice([Number(e.target.value),price[1]])} className='w-[30%]'/>
+                            <Input value={price[0].toLocaleString()} onChange={(e)=>setPrice([Number(e.target.value),price[1]])} className='w-[30%]'/>
                             <p className="text-gray-500 dark:text-gray-400 content-center">원부터</p>  
-                            <Input value={price[1]} onChange={(e)=>setPrice([price[0],Number(e.target.value)])} className='w-[30%]'/>
+                            <Input value={price[1].toLocaleString()} onChange={(e)=>setPrice([price[0],Number(e.target.value)])} className='w-[30%]'/>
                             <p className="text-gray-500 dark:text-gray-400 content-center">원까지</p>  
                         </div>
                     </div>
