@@ -4,6 +4,9 @@ import { Answer } from "./types";
 export const page = atom("main");
 export const question = atom(0);
 export const answers = atom([] as Answer[]);
+export const toWho = atom("친구");
+export const occasion = atom("생일");
+export const priceRange = atom([30000, 200000]);
 
 
 const MockQuestions = [
