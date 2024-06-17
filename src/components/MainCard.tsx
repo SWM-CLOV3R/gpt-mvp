@@ -2,12 +2,18 @@ import Gift from '../images/giftbox.png'
 import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import { Button } from './ui/button';
+import { ref, set } from "firebase/database";
+import {db} from '../firebase';
 
 const MainCard = () => {
     const navigate = useNavigate();
 
     const handleStart = () => {
         const chatID = nanoid(10);
+        set(ref(db, `chats/${chatID}`), {
+            "messages": `test-${chatID}`,
+            chatID,
+        });
         navigate(`/quiz/${chatID}`);
     }
 
