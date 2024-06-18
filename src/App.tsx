@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import MainCard from './components/MainCard';
 
 import { BrowserRouter as Router, Route , Routes} from 'react-router-dom';
@@ -13,6 +13,7 @@ function App() {
       </header>
       <main className='max-h-[90svh] flex w-svw justify-center mb-3 mt-3'>
         <div className='flex justify-center w-[80%] '>
+          <Suspense fallback={<div>Loading...</div>}>
           <Router>
               <Routes>
                   <Route path="/quiz/:chatID" element={<Quiz/>} />
@@ -21,6 +22,7 @@ function App() {
                   </Route>
               </Routes>
           </Router>
+          </Suspense>
         </div>
       </main>
       <footer className='bg-slate-100 text-xs justify-evenly flex flex-col font-light items-center min-h-[5svh]'>

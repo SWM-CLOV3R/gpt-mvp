@@ -1,11 +1,11 @@
 import { useAtom } from 'jotai'
-import { answers, question } from '../atoms'
+import { answers, depth, question } from '../atoms'
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import GiftCard from './GiftCard';
 
 const Results = () => {
-    const [_,setCurrentQuestion] = useAtom(question)
+    const [_,setCurrentQuestion] = useAtom(depth)
     const [userAnswers, setUserAnswers] = useAtom(answers)
     const navigate = useNavigate();
 
