@@ -103,9 +103,15 @@ const MainCard = () => {
                     />
                     <div className='flex justify-end align-middle'>
                         <div className="flex justify-around text-sm text-gray-500 dark:text-gray-400">
-                            <Input value={price[0].toLocaleString()} onChange={(e)=>setPrice([Number(e.target.value),price[1]])} className='w-[30%]'/>
+                            <Input value={price[0].toLocaleString()} onChange={(e)=>{
+                                const value = Number(e.target.value.replace(/,/g, ''))
+                                if (!isNaN(value)) setPrice([value<=500000?value:500000,price[1]])
+                                }} className='w-[30%]'/>
                             <p className="text-gray-500 dark:text-gray-400 content-center">원부터</p>  
-                            <Input value={price[1].toLocaleString()} onChange={(e)=>setPrice([price[0],Number(e.target.value)])} className='w-[30%]'/>
+                            <Input value={price[1].toLocaleString()} onChange={(e)=>{
+                                const value = Number(e.target.value.replace(/,/g, ''))
+                                if (!isNaN(value)) setPrice([price[0],value<=500000?value:500000])
+                                }} className='w-[30%]'/>
                             <p className="text-gray-500 dark:text-gray-400 content-center">원까지</p>  
                         </div>
                     </div>
