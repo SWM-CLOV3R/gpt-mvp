@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { Answer, Product, Question } from "./types";
+import { Answer, Product } from "./types";
 import { update, ref ,child, get as read} from "firebase/database";
 import { db } from "./firebase";
 
@@ -27,7 +27,6 @@ export const getGift = atom(null, async (get,set,chatID) => {
     .then(snapshot => {
     if (snapshot.exists()) {
         const data = snapshot.val();
-        console.log(data);
         set(gift, data.result)
         set(isValidGift, true)
     } else {

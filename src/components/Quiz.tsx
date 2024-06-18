@@ -1,20 +1,15 @@
 import { useAtom } from 'jotai'
-import { answers, depth, finishChat, loading, question, updateQuestion } from '../atoms'
+import { depth, finishChat, question, updateQuestion } from '../atoms'
 import { useNavigate, useParams } from 'react-router-dom';
-import { update, ref } from "firebase/database";
-import { db } from "../firebase";
-import { Suspense, useEffect } from 'react';
-import { Answer, Question } from '@/types';
 
+// MAX DEPTH of the chat
 const MAXDEPTH = 3
 
 const Quiz = () => {
-    const [questions,setQuestions] = useAtom(question)
+    const [questions] = useAtom(question)
     const [currentQuestion, setCurrentQuestion] = useAtom(depth)
-    const [userAnswers, setUserAnswers] = useAtom(answers)
-    const [isLoading, setIsLoading] = useAtom(loading)
-    const [_, getNextQuestion] = useAtom(updateQuestion)
-    const [r, endChat] = useAtom(finishChat)
+    const getNextQuestion = useAtom(updateQuestion)[1]
+    const endChat = useAtom(finishChat)[1]
     const navigate = useNavigate();
     const { chatID } = useParams()
     

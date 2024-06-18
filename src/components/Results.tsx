@@ -2,16 +2,18 @@ import { useAtom } from 'jotai'
 import { answers, depth, getGift, gift, isValidGift } from '../atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from './ui/button';
-import GiftCard from './GiftCard';
-import { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
+import NotFound from './NotFound';
+
+const GiftCard = React.lazy(() => import('./GiftCard'))
 
 const Results = () => {
-    const [_,setCurrentQuestion] = useAtom(depth)
+    const setCurrentQuestion = useAtom(depth)[1]
     const [userAnswers, setUserAnswers] = useAtom(answers)
-    const [product, setProduct] = useAtom(gift)
+    const [product] = useAtom(gift)
     const navigate = useNavigate();
     const { chatID } = useParams()
-    const [isValid, setIsValid] = useAtom(isValidGift)
+    const [isValid] = useAtom(isValidGift)
     const getResult = useAtom(getGift)[1]
     
 
@@ -40,6 +42,7 @@ const Results = () => {
             </h2>
             <Suspense fallback={<div>Loading...</div>}>
                 {isValid&&<GiftCard product={product}/>}
+                {!isValid&&<NotFound/>}
             </Suspense>
             <Button onClick={handleRetry} className=" w-full">
                 다른 선물 찾기
