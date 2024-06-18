@@ -14,7 +14,7 @@ export const answers = atom([] as Answer[]);
 
 export const recipient = atom("친구");
 export const occasion = atom("생일");
-export const priceRange = atom([30000, 200000]);
+export const priceRange = atom([30000, 100000]);
 
 export const loading = atom(false);
 

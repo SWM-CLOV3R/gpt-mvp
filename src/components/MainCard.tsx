@@ -95,7 +95,7 @@ const MainCard = () => {
                     <Slider
                     id="gift-price"
                     min={0}
-                    max={500000}
+                    max={300000}
                     step={10000}
                     value={price}
                     onValueChange={setPrice}
