@@ -1,14 +1,12 @@
 import { atom } from "jotai";
-import { Answer, Question } from "./types";
-import { update, ref } from "firebase/database";
+import { Answer, Product, Question } from "./types";
+import { update, ref ,child, get as read} from "firebase/database";
 import { db } from "./firebase";
 
 const MockQuestions = {
     question: "Loading...",
     options: ["One", "Two", "Three"],
 }
-
-export const page = atom("main");
 
 export const question = atom(MockQuestions);
 export const depth = atom(0);
@@ -19,6 +17,29 @@ export const occasion = atom("생일");
 export const priceRange = atom([30000, 200000]);
 
 export const loading = atom(false);
+
+export const gift = atom({} as Product);
+export const isValidGift = atom(false);
+
+export const getGift = atom(null, async (get,set,chatID) => {
+    const dbRef = ref(db);
+    read(child(dbRef, `/chats/${chatID}`))
+    .then(snapshot => {
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+        console.log(data);
+        set(gift, data.result)
+        set(isValidGift, true)
+    } else {
+        console.log("No data available");
+        set(isValidGift, false)
+    }
+    })
+        .catch(error => {
+        console.error(error);
+        set(isValidGift, false)
+    });
+})
 
 export const startChat = atom(null, async (get,set,prompt) => {
     

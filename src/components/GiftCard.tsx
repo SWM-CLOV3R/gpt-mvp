@@ -1,13 +1,19 @@
+import { Product } from '@/types'
 import Gift from '../images/giftbox.png'
 import { Button } from './ui/button'
 
-const GiftCard = () => {
+interface GiftCardProps {
+  product: Product
+}
+
+const GiftCard = (props:GiftCardProps) => {
+  const { product } = props
   return (
     <div className='w-full'>
-      <a href='https://www.29cm.co.kr'>
+      <a href={product.url}>
         <div className='flex justify-center'>
           <img
-            src={Gift}
+            src={product.image || Gift}
             alt="recommended product"
             width={200}
             height={200}
@@ -15,10 +21,10 @@ const GiftCard = () => {
           />
         </div>
         <div className="py-2 bg-white dark:bg-gray-950">
-          <h3 className="text-lg font-semibold md:text-xl">Apparel</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <h3 className="text-lg font-semibold md:text-xl">{product.title}</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{product.description}</p>
           <div className="flex items-center justify-between mt-2">
-            <h4 className="text-base font-semibold md:text-lg">\30,000</h4>
+            <h4 className="text-base font-semibold md:text-lg">{product.price.toLocaleString()}</h4>
             <Button size="sm" className='py-0 px-2 bg-blue-500 hover:bg-blue-600'>구매하러 가기</Button>
           </div>
         </div>

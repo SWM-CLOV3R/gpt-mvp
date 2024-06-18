@@ -8,6 +8,7 @@ export type Product = {
     description: string;
     image: string;
     price: number;
+    url: string;
 }
 
 export type Question = {
