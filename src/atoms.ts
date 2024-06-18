@@ -91,7 +91,8 @@ export const finishChat = atom(null, async (get,set,answer:Answer, chatID) => {
                 title: "Gift Title",
                 description: "Gift Description",
                 image: "https://via.placeholder.com/150",
-                price: 10000
+                price: 10000,
+                url: "https://www.29cm.co.kr/",
             }
         })
         update(

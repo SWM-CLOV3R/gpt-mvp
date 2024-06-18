@@ -10,7 +10,7 @@ const GiftCard = (props:GiftCardProps) => {
   const { product } = props
   return (
     <div className='w-full'>
-      <a href={product.url}>
+      <a href={product.url} target='_blank' rel="noreferrer">
         <div className='flex justify-center'>
           <img
             src={product.image || Gift}

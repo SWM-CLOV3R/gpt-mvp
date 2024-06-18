@@ -63,16 +63,16 @@ const Results = () => {
                 <div className='flex flex-col'>
                     <p className='m-1 text-lg'><strong className='text-xl font-Bayon'>One!t</strong>의 SNS 채널에서 확인하세요!</p>
                     <div className='flex justify-start'>
-                        <a href='https://open.kakao.com/o/g9Pganwg'>
+                        <a href='https://open.kakao.com/o/g9Pganwg' target='_blank' rel="noreferrer">
                             {/* <Button className='bg-[#FEE500] text-[#191919] hover:bg-[#FEE500] hover:text-[#191919]'> */}
                                 <img src={Kakao} alt='kakao-channel' className='h-[35px] mr-1'></img>
                                 {/* <p className='m-1'>오픈채팅</p> */}
                             {/* </Button> */}
                         </a>
-                        <a href='https://www.instagram.com/oneit.gif'>
+                        <a href='https://www.instagram.com/oneit.gif' target='_blank' rel="noreferrer">
                             <img src={Instagram} alt='instagram' className='h-[35px] mr-1'></img>
                         </a>
-                        <a href='https://blog.naver.com/oneit_gift'>
+                        <a href='https://blog.naver.com/oneit_gift' target='_blank' rel="noreferrer">
                             <img src={Naver} alt='naver-blog' className='h-[35px]'></img>
                         </a>
                     </div>
