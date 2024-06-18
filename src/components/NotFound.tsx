@@ -1,17 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { Spinner } from './ui/spinner';
 
 const NotFound = () => {
-  return (
-    <div className='w-full max-h-[75%] p-2'>
-        <div className="flex flex-col items-center gap-4 text-center">
-        <TriangleAlertIcon className="h-12 w-12 text-gray-500 dark:text-gray-400" />
-        <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-4xl">Page Not Found</h1>
-        <span className="max-w-[90%] text-gray-500 md:text-lg dark:text-gray-400">
-            URL을 확인하고 다시 시도해주세요
-        </span>
-      </div>
-    </div>
-  )
+    const [isRendered, setIsRendered] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsRendered(true);
+        }, 500); // Delay of 5 seconds
+    
+        return () => clearTimeout(timer); // Clean up on component unmount
+    }, []);
+
+    if (!isRendered) {
+        // return <Spinner/>; // or return a loading spinner, etc.
+        return null
+    }
+
+    return (
+        <div className='w-full max-h-[75%] p-2'>
+            <div className="flex flex-col items-center gap-4 text-center">
+            <TriangleAlertIcon className="h-12 w-12 text-gray-500 dark:text-gray-400" />
+            <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-4xl">Page Not Found</h1>
+            <span className="max-w-[90%] text-gray-500 md:text-lg dark:text-gray-400">
+                URL을 확인하고 다시 시도해주세요
+            </span>
+        </div>
+        </div>
+    )
 }
 
 function TriangleAlertIcon(props:any) {
