@@ -10,24 +10,32 @@ import { useState } from 'react';
 import { Input } from './ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 import { useAtom } from 'jotai';
-import { occasion, priceRange, toWho } from '../atoms';
+import { occasion, priceRange, recipient, startChat } from '../atoms';
 
 const MainCard = () => {
     const navigate = useNavigate();
     const [price, setPrice] = useAtom<number[]>(priceRange)
     const [showModal, setShowModal] = useState(false)
-    const [userToWho, setUserToWho] = useAtom(toWho)
+    const [userRecipient, setUserRecipient] = useAtom(recipient)
     const [userOccasion, setUserOccasion] = useAtom(occasion)
+    const [_,getQuestion] = useAtom(startChat)
 
-    const handleStart = () => {
+    const handleStart = async () => {
         const chatID = nanoid(10);
-        set(ref(db, `chats/${chatID}`), {
-            chatID,
-            towho: userToWho,
-            occasion: userOccasion,
-            priceRange: price
-        });
-        navigate(`/quiz/${chatID}`);
+        try { // API call to get first question
+            set(ref(db, `chats/${chatID}`), {
+                chatID,
+                recipient: userRecipient,
+                occasion: userOccasion,
+                priceRange: price
+            });
+            const prompt = `I wanna buy a gift for my ${userRecipient} for ${userOccasion} within the price range of ${price[0]} to ${price[1]}`
+            getQuestion(prompt)
+        } catch (error) {
+            console.log(error);
+        } finally{
+            navigate(`/quiz/${chatID}`);
+        }
     }
 
     return(
@@ -52,7 +60,7 @@ const MainCard = () => {
                 <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div className="flex items-center gap-2 justify-around">
-                    <Select onValueChange={setUserToWho} value={userToWho}>
+                    <Select onValueChange={setUserRecipient} value={userRecipient}>
                     <SelectTrigger className="w-[35%]">
                         <SelectValue placeholder="누구" />
                     </SelectTrigger>
@@ -88,16 +96,22 @@ const MainCard = () => {
                     id="gift-price"
                     min={0}
                     max={500000}
-                    step={5000}
+                    step={10000}
                     value={price}
                     onValueChange={setPrice}
                     className="w-full"
                     />
                     <div className='flex justify-end align-middle'>
                         <div className="flex justify-around text-sm text-gray-500 dark:text-gray-400">
-                            <Input value={price[0].toLocaleString()} onChange={(e)=>setPrice([Number(e.target.value),price[1]])} className='w-[30%]'/>
+                            <Input value={price[0].toLocaleString()} onChange={(e)=>{
+                                const value = Number(e.target.value.replace(/,/g, ''))
+                                if (!isNaN(value)) setPrice([value<=500000?value:500000,price[1]])
+                                }} className='w-[30%]'/>
                             <p className="text-gray-500 dark:text-gray-400 content-center">원부터</p>  
-                            <Input value={price[1].toLocaleString()} onChange={(e)=>setPrice([price[0],Number(e.target.value)])} className='w-[30%]'/>
+                            <Input value={price[1].toLocaleString()} onChange={(e)=>{
+                                const value = Number(e.target.value.replace(/,/g, ''))
+                                if (!isNaN(value)) setPrice([price[0],value<=500000?value:500000])
+                                }} className='w-[30%]'/>
                             <p className="text-gray-500 dark:text-gray-400 content-center">원까지</p>  
                         </div>
                     </div>
