@@ -25,7 +25,7 @@ const GiftCard = (props:GiftCardProps) => {
           <p className="text-sm text-gray-500 dark:text-gray-400">{product.description}</p>
           <div className="flex items-center justify-between mt-2">
             <h4 className="text-base font-semibold md:text-lg">{product.price.toLocaleString()}</h4>
-            <Button size="sm" className='py-0 px-2 bg-blue-500 hover:bg-blue-600'>구매하러 가기</Button>
+            <Button size="sm" className='py-0 px-2 bg-blue-500 hover:bg-blue-400'>구매하러 가기</Button>
           </div>
         </div>
       </a>

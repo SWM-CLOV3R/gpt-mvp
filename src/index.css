@@ -5,8 +5,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Bayon&display=swap');
 
 @font-face {
-  font-family: "Bayon";
-  src: url("https://fonts.googleapis.com/css2?family=Bayon&display=swap");
+  font-family: 'Yangjin';
+  src: url('https://fastly.jsdelivr.net/gh/supernovice-lab/font@0.9/yangjin.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -85,6 +85,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: sans-serif;
+    font-family: Yangjin;
   }
 }

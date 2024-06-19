@@ -9,7 +9,7 @@ const Results = React.lazy(() => import('./components/Results'));
 function App() {
   return (
     <div className="App h-svh flex flex-col justify-between">
-      <header className="bg-black flex justify-center min-h-[5svh]">
+      <header className="bg-black flex justify-center min-h-[5svh] align-middle">
         <h2 className='text-white text-3xl font-Bayon'> One!t </h2>
       </header>
       <main className='max-h-[90svh] flex w-svw justify-center mb-3 mt-3'>
