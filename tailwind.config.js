@@ -14,6 +14,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        'oneit-pink': '#ffa0a0',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -55,6 +56,7 @@ module.exports = {
       },
       fontFamily: {
         Bayon:["Bayon"],
+        Yangjin:["Yangjin"],
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       keyframes: {
