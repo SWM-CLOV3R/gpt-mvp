@@ -3,14 +3,6 @@
 @tailwind utilities;
   
 @import url('https://fonts.googleapis.com/css2?family=Bayon&display=swap');
-@import url('https://fastly.jsdelivr.net/gh/supernovice-lab/font@0.9/yangjin.woff');
-
-@font-face {
-  font-family: "Bayon";
-  src: url("https://fonts.googleapis.com/css2?family=Bayon&display=swap");
-  font-weight: normal;
-  font-style: normal;
-}
 
 @font-face {
   font-family: 'Yangjin';
