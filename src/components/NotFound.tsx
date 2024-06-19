@@ -21,7 +21,7 @@ const NotFound = () => {
         <div className='w-full max-h-[75%] p-2'>
             <div className="flex flex-col items-center gap-4 text-center">
             <TriangleAlertIcon className="h-12 w-12 text-gray-500 dark:text-gray-400" />
-            <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-4xl">Page Not Found</h1>
+            <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-4xl text-oneit-pink">Page Not Found</h1>
             <span className="max-w-[90%] text-gray-500 md:text-lg dark:text-gray-400">
                 URL을 확인하고 다시 시도해주세요
             </span>
