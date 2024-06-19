@@ -1,9 +1,10 @@
 import React, { Suspense } from 'react';
-import MainCard from './components/MainCard';
 
 import { BrowserRouter as Router, Route , Routes} from 'react-router-dom';
-import Quiz from './components/Quiz';
-import Results from './components/Results';
+import { Spinner } from './components/ui/spinner';
+const MainCard = React.lazy(() => import('./components/MainCard'));
+const Quiz = React.lazy(() => import('./components/Quiz'));
+const Results = React.lazy(() => import('./components/Results'));
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
       </header>
       <main className='max-h-[90svh] flex w-svw justify-center mb-3 mt-3'>
         <div className='flex justify-center w-[80%] '>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Spinner size="large" />}>
           <Router>
               <Routes>
                   <Route path="/quiz/:chatID" element={<Quiz/>} />

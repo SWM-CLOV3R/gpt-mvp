@@ -18,7 +18,7 @@ const MainCard = () => {
     const [showModal, setShowModal] = useState(false)
     const [userRecipient, setUserRecipient] = useAtom(recipient)
     const [userOccasion, setUserOccasion] = useAtom(occasion)
-    const [_,getQuestion] = useAtom(startChat)
+    const getQuestion = useAtom(startChat)[1]
 
     const handleStart = async () => {
         const chatID = nanoid(10);
@@ -95,7 +95,7 @@ const MainCard = () => {
                     <Slider
                     id="gift-price"
                     min={0}
-                    max={500000}
+                    max={300000}
                     step={10000}
                     value={price}
                     onValueChange={setPrice}
