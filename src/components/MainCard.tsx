@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { Input } from './ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 import { useAtom, useSetAtom } from 'jotai';
-import { occasion, priceRange, recipient, startChat } from '../atoms';
+import { gender, occasion, priceRange, recipient, startChat } from '../atoms';
 
 const MainCard = () => {
     const navigate = useNavigate();
@@ -19,12 +19,14 @@ const MainCard = () => {
     const [userRecipient, setUserRecipient] = useAtom(recipient)
     const [userOccasion, setUserOccasion] = useAtom(occasion)
     const getQuestion = useSetAtom(startChat)
+    const [userGender, setUserGender] = useAtom(gender)
 
     const handleStart = async () => {
         const chatID = nanoid(10);
         try { // API call to get first question
             set(ref(db, `chats/${chatID}`), {
                 chatID,
+                gender: userGender,
                 recipient: userRecipient,
                 occasion: userOccasion,
                 priceRange: price
@@ -61,15 +63,25 @@ const MainCard = () => {
                 <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div className="flex items-center gap-2 justify-around">
+                    <Select onValueChange={setUserGender} value={userGender}>
+                    <SelectTrigger className="w-[20%]">
+                        <SelectValue placeholder={"성별"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                        <SelectItem value="남성">남성</SelectItem>
+                        <SelectItem value="여성">여성</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                    </Select>
                     <Select onValueChange={setUserRecipient} value={userRecipient}>
-                    <SelectTrigger className="w-[35%]">
+                    <SelectTrigger className="w-[25%]">
                         <SelectValue placeholder="누구" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
                         <SelectItem value="친구">친구</SelectItem>
-                        <SelectItem value="여자친구">여자친구</SelectItem>
-                        <SelectItem value="남자친구">남자친구</SelectItem>
+                        <SelectItem value="애인">애인</SelectItem>
                         <SelectItem value="부모님">부모님</SelectItem>
                         <SelectItem value="동료">동료</SelectItem>
                         <SelectItem value="지인">지인</SelectItem>
@@ -78,19 +90,20 @@ const MainCard = () => {
                     </Select>
                     <p className="text-gray-500 dark:text-gray-400">에게</p>
                     <Select onValueChange={setUserOccasion} value={userOccasion}>
-                    <SelectTrigger className="w-[35%]">
-                        <SelectValue placeholder="무슨 선물을" />
+                    <SelectTrigger className="w-[25%]">
+                        <SelectValue placeholder="어떤" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent >
                         <SelectGroup >
                         <SelectItem value="생일">생일</SelectItem>
                         <SelectItem value="기념일">기념일</SelectItem>
-                        <SelectItem value="졸업 축하">졸업</SelectItem>
+                        <SelectItem value="졸업">졸업</SelectItem>
                         <SelectItem value="응원">응원</SelectItem>
                         <SelectItem value="기타">기타</SelectItem>
                         </SelectGroup>
                     </SelectContent>
                     </Select>
+                    <p className="text-gray-500 dark:text-gray-400">선물을</p>
                 </div>
                 <div className="space-y-2 w-full my-2">
                     <Slider
