@@ -9,17 +9,26 @@ const MockQuestions = {
 }
 
 export const question = atom(MockQuestions);
+question.debugLabel = "question";
 export const depth = atom(0);
+depth.debugLabel = "depth";
 export const answers = atom([] as Answer[]);
+answers.debugLabel = "answers";
 
 export const recipient = atom("친구");
+recipient.debugLabel = "recipient";
 export const occasion = atom("생일");
+occasion.debugLabel = "occasion";
 export const priceRange = atom([30000, 100000]);
+priceRange.debugLabel = "priceRange";
 
 export const loading = atom(false);
+loading.debugLabel = "loading";
 
 export const gift = atom({} as Product);
+gift.debugLabel = "gift";
 export const isValidGift = atom(false);
+isValidGift.debugLabel = "isValidGift";
 
 export const getGift = atom(null, async (get,set,chatID) => {
     const dbRef = ref(db);
@@ -39,6 +48,7 @@ export const getGift = atom(null, async (get,set,chatID) => {
         set(isValidGift, false)
     });
 })
+getGift.debugLabel = "getGift";
 
 export const startChat = atom(null, async (get,set,prompt) => {
     
@@ -57,6 +67,7 @@ export const startChat = atom(null, async (get,set,prompt) => {
         set(loading, false)
     }
 })
+startChat.debugLabel = "startChat";
 
 export const updateQuestion = atom(null, async (get,set,answer:Answer) => {
     
@@ -76,6 +87,7 @@ export const updateQuestion = atom(null, async (get,set,answer:Answer) => {
         set(loading, false)
     }
 })
+updateQuestion.debugLabel = "updateQuestion";
 
 export const finishChat = atom(null, async (get,set,answer:Answer, chatID) => {
     set(answers, [...get(answers), answer])
@@ -109,6 +121,7 @@ export const finishChat = atom(null, async (get,set,answer:Answer, chatID) => {
         set(question, MockQuestions)
     }
 })
+finishChat.debugLabel = "finishChat";
 
 // const MockQuestions = [
 //     {

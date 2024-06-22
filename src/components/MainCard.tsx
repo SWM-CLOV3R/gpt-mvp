@@ -9,7 +9,7 @@ import { Slider } from './ui/slider';
 import { useState } from 'react';
 import { Input } from './ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { occasion, priceRange, recipient, startChat } from '../atoms';
 
 const MainCard = () => {
@@ -18,7 +18,7 @@ const MainCard = () => {
     const [showModal, setShowModal] = useState(false)
     const [userRecipient, setUserRecipient] = useAtom(recipient)
     const [userOccasion, setUserOccasion] = useAtom(occasion)
-    const getQuestion = useAtom(startChat)[1]
+    const getQuestion = useSetAtom(startChat)
 
     const handleStart = async () => {
         const chatID = nanoid(10);

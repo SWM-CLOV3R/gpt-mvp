@@ -1,4 +1,4 @@
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { depth, finishChat, question, updateQuestion } from '../atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -6,10 +6,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 const MAXDEPTH = 3
 
 const Quiz = () => {
-    const [questions] = useAtom(question)
+    const questions = useAtomValue(question)
     const [currentQuestion, setCurrentQuestion] = useAtom(depth)
-    const getNextQuestion = useAtom(updateQuestion)[1]
-    const endChat = useAtom(finishChat)[1]
+    const getNextQuestion = useSetAtom(updateQuestion)
+    const endChat = useSetAtom(finishChat)
     const navigate = useNavigate();
     const { chatID } = useParams()
     

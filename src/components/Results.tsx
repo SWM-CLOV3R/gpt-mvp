@@ -1,4 +1,4 @@
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { answers, depth, getGift, gift, isValidGift } from '../atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from './ui/button';
@@ -13,13 +13,14 @@ const NotFound = React.lazy(() => import('./NotFound'))
 
 const Results = () => {
     const [showModal, setShowModal] = useState(false)
-    const setCurrentQuestion = useAtom(depth)[1]
-    const [userAnswers, setUserAnswers] = useAtom(answers)
-    const [product] = useAtom(gift)
     const navigate = useNavigate();
     const { chatID } = useParams()
-    const [isValid] = useAtom(isValidGift)
-    const getResult = useAtom(getGift)[1]
+
+    const [userAnswers, setUserAnswers] = useAtom(answers)
+    const setCurrentQuestion = useSetAtom(depth)
+    const getResult = useSetAtom(getGift)
+    const product = useAtomValue(gift)
+    const isValid = useAtomValue(isValidGift)
     
 
     const handleRetry = () => {
