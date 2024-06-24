@@ -24,19 +24,18 @@ const MainCard = () => {
     const handleStart = async () => {
         const chatID = nanoid(10);
         try { // API call to get first question
-            set(ref(db, `chats/${chatID}`), {
+            await set(ref(db, `chats/${chatID}`), {
                 chatID,
                 gender: userGender,
                 recipient: userRecipient,
                 occasion: userOccasion,
                 priceRange: price
             });
-            const prompt = `I wanna buy a gift for my ${userRecipient} for ${userOccasion} within the price range of ${price[0]} to ${price[1]}`
-            getQuestion(prompt)
+            const prompt = `${userGender}인 ${userRecipient}에게 ${userOccasion} 선물로 ${price[0]}원에서 ${price[1]}원 사이의 선물을 하고 싶다`
+            await getQuestion(prompt)
+            navigate(`/quiz/${chatID}`);
         } catch (error) {
             console.log(error);
-        } finally{
-            navigate(`/quiz/${chatID}`);
         }
     }
 

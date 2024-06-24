@@ -15,3 +15,11 @@ export type Question = {
     question: string;
     options: string[];
 } 
+
+export type ResponseContent = {
+    type: string;
+    text: {
+        value: string;
+        annotations: any[];
+    };
+}

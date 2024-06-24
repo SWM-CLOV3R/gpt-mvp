@@ -1,17 +1,22 @@
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { depth, finishChat, question, updateQuestion } from '../atoms'
+import { depth, finishChat, loading, question, updateQuestion } from '../atoms'
 import { useNavigate, useParams } from 'react-router-dom';
+import { Spinner } from './ui/spinner';
 
 // MAX DEPTH of the chat
 const MAXDEPTH = 3
 
 const Quiz = () => {
     const questions = useAtomValue(question)
+    const isloading = useAtomValue(loading)
     const [currentQuestion, setCurrentQuestion] = useAtom(depth)
     const getNextQuestion = useSetAtom(updateQuestion)
     const endChat = useSetAtom(finishChat)
     const navigate = useNavigate();
     const { chatID } = useParams()
+
+    // Debugging logs
+    console.log('Questions:', questions, 'Loading:', isloading);
     
 
     const handleAnswerClick = async (index:number) => {
@@ -28,8 +33,13 @@ const Quiz = () => {
         }
     }
 
+    if (isloading || !questions || !questions.options || questions.options.length === 0) {
+        return <Spinner/>
+    }
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full">
+            
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
                 {questions.question}
             </h2>
