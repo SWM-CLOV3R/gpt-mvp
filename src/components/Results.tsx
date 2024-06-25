@@ -25,7 +25,6 @@ const Results = () => {
 
     const handleRetry = () => {
         navigate('/');
-        console.log(userAnswers);
         
         setCurrentQuestion(0)
         setUserAnswers([])

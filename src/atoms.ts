@@ -115,6 +115,7 @@ export const updateQuestion = atom(null, async (get,set,answer:Answer) => {
         set(answers, [...get(answers), answer])
     } catch (error) {
         console.log(error);
+        throw new Error("Failed to update question");
     } finally{
         set(loading, false)
     }
@@ -140,6 +141,7 @@ export const finishChat = atom(null, async (get,set,answer:Answer, chatID) => {
 
     } catch (error) {
         console.log(error);
+        throw new Error("Failed to finish chat");
     } finally{
         set(loading, false)
         set(depth, 0)
@@ -193,12 +195,16 @@ const runGPT = async (thread: Thread, assistant: Assistant, retryCount = 3) => {
                     // console.log(jsonData);
                     
                     resolve(jsonData);
-                })
+                }).catch((error) => {
+                    console.log(error);
+                    reject(new Error("Failed to get messages"));
+                });
             } else if (retryCount > 0) {
+                console.log(run);
                 console.log(`Retrying... Attempts left: ${retryCount}`);
                 resolve(runGPT(thread, assistant, retryCount - 1));
             } else {
-                console.log(run.status);
+                console.log(run);
                 reject(new Error("Run not completed after multiple attempts"));
             }
         }).catch((error) => {
