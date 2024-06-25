@@ -1,6 +1,6 @@
 import React, { ReactElement, Suspense } from 'react';
 
-import { BrowserRouter as Router, Route , Routes} from 'react-router-dom';
+import { BrowserRouter as Router, Route , Routes, Navigate} from 'react-router-dom';
 import { Spinner } from './components/ui/spinner';
 import { useAtomsDevtools } from 'jotai-devtools';
 import { Provider } from 'jotai';
@@ -8,10 +8,10 @@ const MainCard = React.lazy(() => import('./components/MainCard'));
 const Quiz = React.lazy(() => import('./components/Quiz'));
 const Results = React.lazy(() => import('./components/Results'));
 
-const AtomsDevtools = ({ children }: { children: ReactElement }) => {
-  useAtomsDevtools("ONE!T");
-  return children;
-};
+// const AtomsDevtools = ({ children }: { children: ReactElement }) => {
+//   useAtomsDevtools("ONE!T");
+//   return children;
+// };
 
 function App() {
   return (
@@ -21,20 +21,20 @@ function App() {
       </header>
       <main className='max-h-[90svh] flex w-svw justify-center mb-3 mt-3'>
         <div className='flex justify-center w-[80%] '>
-        <AtomsDevtools>
+        {/* <AtomsDevtools> */}
           <Suspense fallback={<Spinner size="large" />}>
-          <Provider>
+          {/* <Provider> */}
             <Router>
                 <Routes>
                     <Route path="/quiz/:chatID" element={<Quiz/>} />
                     <Route path="/result/:chatID" element={<Results/>} />
-                    <Route path="/" element={<MainCard/>}>
-                    </Route>
+                    <Route path="/" element={<MainCard/>}/>
+                    <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </Router>
-          </Provider>
+          {/* </Provider> */}
           </Suspense>
-        </AtomsDevtools>
+        {/* </AtomsDevtools> */}
         </div>
       </main>
       <footer className='bg-slate-100 text-xs justify-evenly flex flex-col font-light items-center min-h-[5svh]'>

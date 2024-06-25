@@ -33,9 +33,10 @@ const MainCard = () => {
             });
             const prompt = `${userGender}인 ${userRecipient}에게 ${userOccasion} 선물로 ${price[0]}원에서 ${price[1]}원 사이의 선물을 하고 싶다`
             await getQuestion(prompt)
-            navigate(`/quiz/${chatID}`);
         } catch (error) {
             console.log(error);
+        } finally{
+            navigate(`/quiz/${chatID}`);
         }
     }
 

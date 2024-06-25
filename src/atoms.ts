@@ -85,7 +85,7 @@ export const startChat = atom(null, async (get,set,prompt:string) => {
         const newQuestion = await runGPT(userThread, userAssistant)
 
         if (newQuestion) {
-          set(question, newQuestion);
+            set(question, newQuestion);
         }
     } catch (error) {
         console.log(error);
@@ -107,7 +107,7 @@ export const updateQuestion = atom(null, async (get,set,answer:Answer) => {
                 content: answer.answer
             }
         );
-        console.log(message);
+        // console.log(message);
         
         const newQuestion = await runGPT(get(thread), get(assistant))
         set(question, newQuestion)
@@ -128,6 +128,7 @@ export const finishChat = atom(null, async (get,set,answer:Answer, chatID) => {
             ref(db, `/chats/${chatID}`),
             { answers: get(answers) }
         );
+
         const recommended = await getRecommendation(get(thread), get(assistant))
 
         set(gift, recommended)
@@ -171,7 +172,7 @@ const getGPTThread = async () => {
     }
 };
 
-const runGPT = async (thread: Thread, assistant: Assistant) => {
+const runGPT = async (thread: Thread, assistant: Assistant, retryCount = 3) => {
     return new Promise<Question>((resolve, reject) => {
         openai.beta.threads.runs.createAndPoll(
             thread.id,
@@ -187,14 +188,17 @@ const runGPT = async (thread: Thread, assistant: Assistant) => {
                     }
                 ).then((messages) => {
                     const response = messages.data[0].content[0] as ResponseContent;
-                    console.log( response);
-                    const jsonData : Question = JSON.parse(response.text.value);
-                    console.log(jsonData);
+                    const jsonData: Question = JSON.parse(response.text.value);
+                    // console.log(jsonData);
+                    
                     resolve(jsonData);
                 })
+            } else if (retryCount > 0) {
+                console.log(`Retrying... Attempts left: ${retryCount}`);
+                resolve(runGPT(thread, assistant, retryCount - 1));
             } else {
                 console.log(run.status);
-                reject(new Error("Run not completed"));
+                reject(new Error("Run not completed after multiple attempts"));
             }
         })
     });
@@ -216,13 +220,14 @@ const getRecommendation = async (thread: Thread, assistant: Assistant) => {
                     }
                 ).then((messages) => {
                     const response = messages.data[0].content[0] as ResponseContent;
-                    console.log( response);
-                    const jsonData :Product = JSON.parse(response.text.value)[0];
-                    console.log(jsonData);
+                    // console.log(response);
+                    
+                    const jsonData: Product = JSON.parse(response.text.value);
+                    
                     resolve(jsonData);
                 })
             } else {
-                console.log(run.status);
+                console.log(run);
                 reject(new Error("Run not completed"));
             }
         })

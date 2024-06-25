@@ -16,17 +16,17 @@ const Quiz = () => {
     const { chatID } = useParams()
 
     // Debugging logs
-    console.log('Questions:', questions, 'Loading:', isloading);
+    // console.log('Questions:', questions, 'Loading:', isloading);
     
 
     const handleAnswerClick = async (index:number) => {
         if (currentQuestion < MAXDEPTH -1) {
             setCurrentQuestion((prev) => prev + 1)
-            getNextQuestion({question: questions.question, answer: questions.options[index]})
+            await getNextQuestion({question: questions.question, answer: questions.options[index]})
             
         }else if (currentQuestion === MAXDEPTH - 1) { // last question
             // API call to get a result
-            endChat({question: questions.question, answer: questions.options[index]},chatID)
+            await endChat({question: questions.question, answer: questions.options[index]},chatID)
             navigate(`/result/${chatID}`);
         } else {
             console.log("Error: Out of bounds");

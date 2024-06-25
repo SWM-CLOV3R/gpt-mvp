@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import Kakao from '../images/kakao.png'
 import Naver from '../images/naver_blog.png'
 import Instagram from '../images/instagram.png'
+import { Spinner } from './ui/spinner';
 
 const GiftCard = React.lazy(() => import('./GiftCard'))
 const NotFound = React.lazy(() => import('./NotFound'))
@@ -21,7 +22,6 @@ const Results = () => {
     const getResult = useSetAtom(getGift)
     const product = useAtomValue(gift)
     const isValid = useAtomValue(isValidGift)
-    
 
     const handleRetry = () => {
         navigate('/');
@@ -47,7 +47,7 @@ const Results = () => {
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
                 추천 선물
             </h2>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Spinner/>}>
                 {isValid?<GiftCard product={product}/>:<NotFound/>}
             </Suspense>
             <Button onClick={()=>setShowModal(true)} className=" w-full">
