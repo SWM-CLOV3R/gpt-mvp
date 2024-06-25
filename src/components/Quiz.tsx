@@ -71,19 +71,19 @@ const Quiz = () => {
         </div>
         {error && (
             <Dialog open={error} onOpenChange={setError}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px]" onInteractOutside={(e) => {e.preventDefault();}}>
                 <DialogHeader>
-                <DialogTitle>문제 발생</DialogTitle>
+                    <DialogTitle>문제 발생</DialogTitle>
                 </DialogHeader>
                 <DialogDescription>문제가 발생했습니다. 다시 시도해주세요.</DialogDescription>
-                <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => {setError(false); navigate('/'); } }>
-                    메인으로
-                    </Button>
-                    <Button type="submit" onClick={() => {setError(false); handleAnswerClick(selected);} }>
-                    다시시도
-                    </Button>
-                </div>
+                    <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={() => {setError(false); navigate('/'); } }>
+                        메인으로
+                        </Button>
+                        <Button type="submit" onClick={() => {setError(false); handleAnswerClick(selected);} }>
+                        다시시도
+                        </Button>
+                    </div>
             </DialogContent>
             </Dialog>
             )}
