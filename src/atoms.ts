@@ -89,6 +89,7 @@ export const startChat = atom(null, async (get,set,prompt:string) => {
         }
     } catch (error) {
         console.log(error);
+        throw new Error("Failed to start chat");
     } finally{
         set(loading, false)
     }
@@ -200,7 +201,10 @@ const runGPT = async (thread: Thread, assistant: Assistant, retryCount = 3) => {
                 console.log(run.status);
                 reject(new Error("Run not completed after multiple attempts"));
             }
-        })
+        }).catch((error) => {
+            console.log(error);
+            reject(new Error("Run failed"));
+        });
     });
 }
 
@@ -230,6 +234,9 @@ const getRecommendation = async (thread: Thread, assistant: Assistant) => {
                 console.log(run);
                 reject(new Error("Run not completed"));
             }
-        })
+        }).catch((error) => {
+            console.log(error);
+            reject(new Error("Run failed"));
+        });
     });
 }

@@ -11,17 +11,22 @@ import { Input } from './ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 import { useAtom, useSetAtom } from 'jotai';
 import { gender, occasion, priceRange, recipient, startChat } from '../atoms';
+import { Spinner } from './ui/spinner';
 
 const MainCard = () => {
     const navigate = useNavigate();
-    const [price, setPrice] = useAtom<number[]>(priceRange)
     const [showModal, setShowModal] = useState(false)
+    const [error, setError] = useState(false)
+    const [loading, setLoading] = useState(false); // New state for loading
+
+    const [price, setPrice] = useAtom<number[]>(priceRange)
     const [userRecipient, setUserRecipient] = useAtom(recipient)
     const [userOccasion, setUserOccasion] = useAtom(occasion)
     const getQuestion = useSetAtom(startChat)
     const [userGender, setUserGender] = useAtom(gender)
 
     const handleStart = async () => {
+        setLoading(true);
         const chatID = nanoid(10);
         try { // API call to get first question
             await set(ref(db, `chats/${chatID}`), {
@@ -33,12 +38,23 @@ const MainCard = () => {
             });
             const prompt = `${userGender}인 ${userRecipient}에게 ${userOccasion} 선물로 ${price[0]}원에서 ${price[1]}원 사이의 선물을 하고 싶다`
             await getQuestion(prompt)
+            navigate(`/quiz/${chatID}`);
         } catch (error) {
             console.log(error);
-        } finally{
-            navigate(`/quiz/${chatID}`);
+            setError(true)
+            // // Alert the user
+            // if (window.confirm("다시 시도")) {
+            //     handleStart(); // Retry
+            // } else {
+            //     navigate('/'); // Go back home, assuming `navigate` is from your routing library
+            // }
+        }finally {
+            setLoading(false); // End loading
         }
     }
+    
+    if(loading) return <Spinner/>
+
 
     return(
         <>
@@ -136,6 +152,24 @@ const MainCard = () => {
                     </Button>
                     <Button type="submit" onClick={() => {setShowModal(false); handleStart()}}>
                     추천받기
+                    </Button>
+                </div>
+            </DialogContent>
+            </Dialog>
+        )}
+        {error && (
+            <Dialog open={error} onOpenChange={setError}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                <DialogTitle>문제 발생</DialogTitle>
+                </DialogHeader>
+                <DialogDescription>문제가 발생했습니다. 다시 시도해주세요.</DialogDescription>
+                <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => {setError(false); navigate('/'); } }>
+                    메인으로
+                    </Button>
+                    <Button type="submit" onClick={() => {setError(false); handleStart();} }>
+                    다시시도
                     </Button>
                 </div>
             </DialogContent>
