@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import Kakao from '../images/kakao.png'
 import Naver from '../images/naver_blog.png'
 import Instagram from '../images/instagram.png'
+import KakaoShare from './KakaoShare';
 
 const GiftCard = React.lazy(() => import('./GiftCard'))
 const NotFound = React.lazy(() => import('./NotFound'))
@@ -17,7 +18,7 @@ const Results = () => {
     const [userAnswers, setUserAnswers] = useAtom(answers)
     const [product] = useAtom(gift)
     const navigate = useNavigate();
-    const { chatID } = useParams()
+    const { chatID }= useParams()
     const [isValid] = useAtom(isValidGift)
     const getResult = useAtom(getGift)[1]
     
@@ -39,7 +40,6 @@ const Results = () => {
     
 
 
-
     return (
         <>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full">
@@ -49,9 +49,12 @@ const Results = () => {
             <Suspense fallback={<div>Loading...</div>}>
                 {isValid?<GiftCard product={product}/>:<NotFound/>}
             </Suspense>
-            <Button onClick={()=>setShowModal(true)} className=" w-full">
-                다른 선물 찾기
-            </Button>
+            <div className='flex justify-evenly'>
+                <KakaoShare chatID = {chatID} product={product}/>
+                <Button onClick={()=>setShowModal(true)} className="w-[40%]">
+                    다른 선물 찾기
+                </Button>
+            </div>
             
         </div>
         {showModal && (
