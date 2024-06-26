@@ -175,7 +175,7 @@ const getGPTThread = async () => {
     }
 };
 
-const runGPT = async (thread: Thread, assistant: Assistant, retryCount = 3) => {
+const runGPT = async (thread: Thread, assistant: Assistant) => {
     return new Promise<Question>((resolve, reject) => {
         openai.beta.threads.runs.createAndPoll(
             thread.id,
@@ -192,20 +192,21 @@ const runGPT = async (thread: Thread, assistant: Assistant, retryCount = 3) => {
                 ).then((messages) => {
                     const response = messages.data[0].content[0] as ResponseContent;
                     const jsonData: Question = JSON.parse(response.text.value);
-                    // console.log(jsonData);
+                    console.log(jsonData);
+
+                    //if jsonData is not a question type, reject
+                    if (jsonData.question === undefined || jsonData.options === undefined) {
+                        reject(new Error("Failed to get question"));
+                    }
                     
                     resolve(jsonData);
                 }).catch((error) => {
                     console.log(error);
                     reject(new Error("Failed to get messages"));
                 });
-            } else if (retryCount > 0) {
+            }else {
                 console.log(run);
-                console.log(`Retrying... Attempts left: ${retryCount}`);
-                resolve(runGPT(thread, assistant, retryCount - 1));
-            } else {
-                console.log(run);
-                reject(new Error("Run not completed after multiple attempts"));
+                reject(new Error("Run not completed"));
             }
         }).catch((error) => {
             console.log(error);
@@ -230,10 +231,13 @@ const getRecommendation = async (thread: Thread, assistant: Assistant) => {
                     }
                 ).then((messages) => {
                     const response = messages.data[0].content[0] as ResponseContent;
-                    // console.log(response);
+                    console.log(response);
                     
                     const jsonData: Product = JSON.parse(response.text.value);
-                    
+                    //if jsonData is not a Product type, reject
+                    if (jsonData.title === undefined || jsonData.price === undefined) {
+                        reject(new Error("Failed to get product"));
+                    }
                     resolve(jsonData);
                 })
             } else {

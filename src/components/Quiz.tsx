@@ -3,7 +3,7 @@ import { depth, finishChat, loading, question, updateQuestion } from '../atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Spinner } from './ui/spinner';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from './ui/dialog';
 import { DialogHeader } from './ui/dialog';
 import { Button } from './ui/button';
 
@@ -28,22 +28,23 @@ const Quiz = () => {
 
     const handleAnswerClick = async (index:number) => {
         setSelected(index)
-        try {
-            if (currentQuestion < MAXDEPTH -1) {
-                setCurrentQuestion((prev) => prev + 1)
-                await getNextQuestion({question: questions.question, answer: questions.options[index]})
-                
-            }else if (currentQuestion === MAXDEPTH - 1) { // last question
-                // API call to get a result
+        if (currentQuestion < MAXDEPTH -1) {
+            try {
+                    setCurrentQuestion((prev) => prev + 1)
+                    await getNextQuestion({question: questions.question, answer: questions.options[index]})
+            } catch (error) {
+                setError(true)
+            }
+        }else if (currentQuestion === MAXDEPTH - 1) {
+            try {
                 await endChat({question: questions.question, answer: questions.options[index]},chatID)
                 navigate(`/result/${chatID}`);
-            } else {
-                console.log("Error: Out of bounds");
+            } catch (error) {
+                setError(true)
             }
-        } catch (error) {
+        }else{
             setError(true)
         }
-
     }
 
     if (isloading) {
@@ -76,14 +77,14 @@ const Quiz = () => {
                     <DialogTitle>문제 발생</DialogTitle>
                 </DialogHeader>
                 <DialogDescription>문제가 발생했습니다. 다시 시도해주세요.</DialogDescription>
-                    <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => {setError(false); navigate('/'); } }>
-                        메인으로
-                        </Button>
-                        <Button type="submit" onClick={() => {setError(false); handleAnswerClick(selected);} }>
-                        다시시도
-                        </Button>
-                    </div>
+                <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => {setError(false); navigate('/'); } }>
+                    메인으로
+                    </Button>
+                    <Button type="submit" onClick={() => {setError(false); handleAnswerClick(selected);} }>
+                    다시시도
+                    </Button>
+                </div>
             </DialogContent>
             </Dialog>
             )}

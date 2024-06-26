@@ -14,9 +14,9 @@ const {Kakao} = window;
 
 const KakaoShare = (props:{chatID:string|undefined, product: Product|undefined}) => {
     const {chatID, product} = props
-    const prodUrl = `https://oneit-gpt.vercel.app/result/${chatID}`
+    const prodUrl = `https://www.oneit.gift/result/${chatID}`
     useEffect(() => {
-        console.log(Kakao);
+        // console.log(Kakao);  
         if(!Kakao.isInitialized()){
             Kakao.init(process.env.REACT_APP_KAKAO_API_KEY);
         }
