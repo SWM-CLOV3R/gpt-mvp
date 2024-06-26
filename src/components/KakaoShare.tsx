@@ -1,7 +1,9 @@
 import { Product } from "@/types"
 import { useEffect } from "react"
 import Logo from '../images/oneit.png'
+import KakaoLogo from '../images/kakao.png'
 import { Button } from "./ui/button";
+import { Share2Icon } from "lucide-react";
 
 declare global {
     interface Window {
@@ -45,12 +47,10 @@ const KakaoShare = (props:{chatID:string|undefined, product: Product|undefined})
         });
     }
 
-  return (
-    <>
-        <Button onClick={handleShare} className="bg-[#FEE500] text-black w-[40%]">
-            카카오톡 공유하기
-        </Button>
-    </>
+    return (
+    <Button variant="outline" onClick={handleShare} className="border-0">
+        <Share2Icon/>
+    </Button>
   )
 }
 

@@ -8,6 +8,8 @@ import Kakao from '../images/kakao.png'
 import Naver from '../images/naver_blog.png'
 import Instagram from '../images/instagram.png'
 import KakaoShare from './KakaoShare';
+import { Spinner } from './ui/spinner';
+import { Share2Icon, ShareIcon } from 'lucide-react';
 
 const GiftCard = React.lazy(() => import('./GiftCard'))
 const NotFound = React.lazy(() => import('./NotFound'))
@@ -42,17 +44,22 @@ const Results = () => {
 
     return (
         <>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md pb-3 max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 flex justify-between px-4">
+                {/* <strong className='font-Bayon text-3xl'>One!t</strong>  */}
                 추천 선물
-            </h2>
-            <Suspense fallback={<div>Loading...</div>}>
-                {isValid?<GiftCard product={product}/>:<NotFound/>}
-            </Suspense>
-            <div className='flex justify-evenly'>
                 <KakaoShare chatID = {chatID} product={product}/>
-                <Button onClick={()=>setShowModal(true)} className="w-[40%]">
-                    다른 선물 찾기
+                {/* <Share2Icon/> */}
+            </h2>
+            <div className=''>
+                <Suspense fallback={<Spinner/>}>
+                    {isValid?<GiftCard product={product}/>:<NotFound/>}
+                </Suspense>
+            </div>
+            <div className='flex flex-col justify-evenly px-2'>
+                <Button size="sm" className='py-0 px-2 text-black w-full'>구매하러 가기</Button>
+                <Button size="sm" onClick={()=>setShowModal(true)} className="bg-oneit-blue hover:bg-oneit-blue/90 text-black w-full mt-2">
+                    더 찾아보기
                 </Button>
             </div>
             

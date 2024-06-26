@@ -15,6 +15,9 @@ module.exports = {
     extend: {
       colors: {
         'oneit-pink': '#ffa0a0',
+        'oneit-navy': '#1B3F87',
+        'oneit-blue': '#A1DBFF',
+        'oneit-orange': '#F2B263',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
