@@ -14,6 +14,7 @@ const GiftCard = (props:GiftCardProps) => {
         <div className='flex justify-center'>
           <img
             src={product.image || Gift}
+            // src="https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240129103642_a5ca62d182ec419285ba708b51cb72c2.jpg"
             alt="recommended product"
             width={200}
             height={200}
@@ -22,7 +23,7 @@ const GiftCard = (props:GiftCardProps) => {
         </div>
         <div className="py-2 bg-white dark:bg-gray-950">
           <h3 className="text-lg font-semibold md:text-xl">{product.title}</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{product.description}</p>
+
           <div className="flex items-center justify-end mt-2">
             <h4 className="text-base font-semibold md:text-lg text-onei">{product.price.toLocaleString()}원</h4>
             {/* <Button size="sm" className='py-0 px-2 text-black'>구매하러 가기</Button> */}

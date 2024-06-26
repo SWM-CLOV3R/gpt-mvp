@@ -5,7 +5,7 @@ export type Answer = {
 
 export type Product = {
     title: string;
-    description: string;
+    // description: string;
     image: string;
     price: number;
     url: string;
@@ -15,3 +15,11 @@ export type Question = {
     question: string;
     options: string[];
 } 
+
+export type ResponseContent = {
+    type: string;
+    text: {
+        value: string;
+        annotations: any[];
+    };
+}

@@ -1,7 +1,16 @@
 import { atom } from "jotai";
-import { Answer, Product } from "./types";
+import { Answer, Product, Question, ResponseContent } from "./types";
 import { update, ref ,child, get as read} from "firebase/database";
 import { db } from "./firebase";
+import OpenAI from "openai";
+import { Thread } from "openai/resources/beta/threads/threads";
+import { Assistant } from "openai/resources/beta/assistants";
+import { Message } from "openai/resources/beta/threads/messages";
+import { Run } from "openai/resources/beta/threads/runs/runs";
+const openai = new OpenAI({
+    apiKey: process.env.REACT_APP_GPT_API_KEY,
+    dangerouslyAllowBrowser: true
+});
 
 const MockQuestions = {
     question: "Loading...",
@@ -9,17 +18,32 @@ const MockQuestions = {
 }
 
 export const question = atom(MockQuestions);
+question.debugLabel = "question";
 export const depth = atom(0);
+depth.debugLabel = "depth";
 export const answers = atom([] as Answer[]);
+answers.debugLabel = "answers";
 
 export const recipient = atom("친구");
+recipient.debugLabel = "recipient";
 export const occasion = atom("생일");
+occasion.debugLabel = "occasion";
 export const priceRange = atom([30000, 100000]);
+priceRange.debugLabel = "priceRange";
+export const gender = atom("남성");
+gender.debugLabel = "gender";
 
-export const loading = atom(false);
+export const loading = atom(true);
+loading.debugLabel = "loading";
 
 export const gift = atom({} as Product);
+gift.debugLabel = "gift";
 export const isValidGift = atom(false);
+isValidGift.debugLabel = "isValidGift";
+
+const thread = atom({} as Thread);
+thread.debugLabel = "thread";
+const assistant = atom({} as Assistant);
 
 export const getGift = atom(null, async (get,set,chatID) => {
     const dbRef = ref(db);
@@ -39,43 +63,64 @@ export const getGift = atom(null, async (get,set,chatID) => {
         set(isValidGift, false)
     });
 })
+getGift.debugLabel = "getGift";
 
-export const startChat = atom(null, async (get,set,prompt) => {
-    
-    // API call to get next question
+export const startChat = atom(null, async (get,set,prompt:string) => {
+    set(loading, true)
+
     try {
-        set(loading, true)
-        // const message = await CallGPT({prompt})
-        const mockMessage = JSON.stringify({
-            question: `question ${get(depth) + 1}`,
-            options: ["one", "two", "three"],
-        })
-        set(question, JSON.parse(mockMessage))
+        const userAssistant = await getGPTAssistant();
+        set(assistant, userAssistant)
+
+        const userThread = await getGPTThread();
+        set(thread, userThread)
+
+        const message = await openai.beta.threads.messages.create(
+            userThread.id,
+            {
+                role: "user",
+                content: prompt
+            }
+        );
+        const newQuestion = await runGPT(userThread, userAssistant)
+
+        if (newQuestion) {
+            set(question, newQuestion);
+        }
     } catch (error) {
         console.log(error);
+        throw new Error("Failed to start chat");
     } finally{
         set(loading, false)
     }
 })
+startChat.debugLabel = "startChat";
 
 export const updateQuestion = atom(null, async (get,set,answer:Answer) => {
     
     // API call to get next question
     try {
         set(loading, true)
-        // const message = await CallGPT(`${answer.answer}`)
-        const mockMessage = JSON.stringify({
-            question: `question ${get(depth) + 1}`,
-            options: ["one", "two", "three"],
-        })
-        set(question, JSON.parse(mockMessage))
+        const message = await openai.beta.threads.messages.create(
+            get(thread).id,
+            {
+                role: "user",
+                content: answer.answer
+            }
+        );
+        // console.log(message);
+        
+        const newQuestion = await runGPT(get(thread), get(assistant))
+        set(question, newQuestion)
         set(answers, [...get(answers), answer])
     } catch (error) {
         console.log(error);
+        throw new Error("Failed to update question");
     } finally{
         set(loading, false)
     }
 })
+updateQuestion.debugLabel = "updateQuestion";
 
 export const finishChat = atom(null, async (get,set,answer:Answer, chatID) => {
     set(answers, [...get(answers), answer])
@@ -85,23 +130,18 @@ export const finishChat = atom(null, async (get,set,answer:Answer, chatID) => {
             ref(db, `/chats/${chatID}`),
             { answers: get(answers) }
         );
-        // const message = await CallGPT({prompt:`${answer.answer}`})
-        const MockMessage = JSON.stringify({
-            result: {
-                title: "Gift Title",
-                description: "Gift Description",
-                image: "https://via.placeholder.com/150",
-                price: 10000,
-                url: "https://www.29cm.co.kr/",
-            }
-        })
+
+        const recommended = await getRecommendation(get(thread), get(assistant))
+
+        set(gift, recommended)
         update(
             ref(db, `/chats/${chatID}`),
-            { result: JSON.parse(MockMessage).result }
+            { result: recommended }
         );
 
     } catch (error) {
         console.log(error);
+        throw new Error("Failed to finish chat");
     } finally{
         set(loading, false)
         set(depth, 0)
@@ -109,22 +149,100 @@ export const finishChat = atom(null, async (get,set,answer:Answer, chatID) => {
         set(question, MockQuestions)
     }
 })
+finishChat.debugLabel = "finishChat";
 
-// const MockQuestions = [
-//     {
-//         question: "What is the capital of France?",
-//         options: ["London", "Paris", "Berlin"],
-//     },
-//     {
-//         question: "What is the largest ocean on Earth?",
-//         options: ["Pacific Ocean", "Atlantic Ocean", "Indian Ocean"],
-//     },
-//     {
-//         question: "Who painted the Mona Lisa?",
-//         options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci"],
-//     },
-// ]
+const getGPTAssistant = async () => {
+    try {
+        const assistant = await openai.beta.assistants.retrieve(process.env.REACT_APP_GPT_ASSISTANT_ID||"");
+        // console.log(assistant);
+        
+        return assistant;
+    } catch (error) {
+        console.log(error);
+        return {} as Assistant;
+    }
+}
 
+const getGPTThread = async () => {
+    try {
+        const thread = await openai.beta.threads.create();
+        // console.log(thread);
+        
+        return thread;
+    } catch (error) {
+        console.log(error);
+        return {} as Thread;
+    }
+};
 
+const runGPT = async (thread: Thread, assistant: Assistant, retryCount = 3) => {
+    return new Promise<Question>((resolve, reject) => {
+        openai.beta.threads.runs.createAndPoll(
+            thread.id,
+            { 
+                assistant_id: assistant.id,
+            }
+        ).then((run: Run) => {
+            if (run.status === 'completed') {
+                openai.beta.threads.messages.list(
+                    run.thread_id,
+                    {
+                        limit: 1
+                    }
+                ).then((messages) => {
+                    const response = messages.data[0].content[0] as ResponseContent;
+                    const jsonData: Question = JSON.parse(response.text.value);
+                    // console.log(jsonData);
+                    
+                    resolve(jsonData);
+                }).catch((error) => {
+                    console.log(error);
+                    reject(new Error("Failed to get messages"));
+                });
+            } else if (retryCount > 0) {
+                console.log(run);
+                console.log(`Retrying... Attempts left: ${retryCount}`);
+                resolve(runGPT(thread, assistant, retryCount - 1));
+            } else {
+                console.log(run);
+                reject(new Error("Run not completed after multiple attempts"));
+            }
+        }).catch((error) => {
+            console.log(error);
+            reject(new Error("Run failed"));
+        });
+    });
+}
 
-// export const mockQuestions = atom(MockQuestions)
+const getRecommendation = async (thread: Thread, assistant: Assistant) => {
+    return new Promise<Product>((resolve, reject) => {
+        openai.beta.threads.runs.createAndPoll(
+            thread.id,
+            { 
+                assistant_id: assistant.id,
+            }
+        ).then((run: Run) => {
+            if (run.status === 'completed') {
+                openai.beta.threads.messages.list(
+                    run.thread_id,
+                    {
+                        limit: 1
+                    }
+                ).then((messages) => {
+                    const response = messages.data[0].content[0] as ResponseContent;
+                    // console.log(response);
+                    
+                    const jsonData: Product = JSON.parse(response.text.value);
+                    
+                    resolve(jsonData);
+                })
+            } else {
+                console.log(run);
+                reject(new Error("Run not completed"));
+            }
+        }).catch((error) => {
+            console.log(error);
+            reject(new Error("Run failed"));
+        });
+    });
+}
