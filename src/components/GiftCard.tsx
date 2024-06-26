@@ -9,7 +9,7 @@ interface GiftCardProps {
 const GiftCard = (props:GiftCardProps) => {
   const { product } = props
   return (
-    <div className='w-full'>
+    <div className='w-full px-8'>
       <a href={product.url} target='_blank' rel="noreferrer">
         <div className='flex justify-center'>
           <img
@@ -23,9 +23,9 @@ const GiftCard = (props:GiftCardProps) => {
         <div className="py-2 bg-white dark:bg-gray-950">
           <h3 className="text-lg font-semibold md:text-xl">{product.title}</h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">{product.description}</p>
-          <div className="flex items-center justify-between mt-2">
-            <h4 className="text-base font-semibold md:text-lg">{product.price.toLocaleString()}</h4>
-            <Button size="sm" className='py-0 px-2 bg-blue-500 hover:bg-blue-400'>구매하러 가기</Button>
+          <div className="flex items-center justify-end mt-2">
+            <h4 className="text-base font-semibold md:text-lg text-onei">{product.price.toLocaleString()}원</h4>
+            {/* <Button size="sm" className='py-0 px-2 text-black'>구매하러 가기</Button> */}
           </div>
         </div>
       </a>

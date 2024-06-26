@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai'
 import { depth, finishChat, question, updateQuestion } from '../atoms'
 import { useNavigate, useParams } from 'react-router-dom';
+import { Button } from './ui/button';
 
 // MAX DEPTH of the chat
 const MAXDEPTH = 3
@@ -35,13 +36,13 @@ const Quiz = () => {
             </h2>
             <div className="grid grid-cols-1 gap-4">
                 {questions.options.map((option, index) => (
-                <button
+                <Button
                     key={index}
                     onClick={() => handleAnswerClick(index)}
-                    className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-bold py-2 px-4 rounded"
+                    className=" text-black font-bold py-2 px-4 rounded"
                 >
                     {option}
-                </button>
+                </Button>
                 ))}
             </div>
         </div>
