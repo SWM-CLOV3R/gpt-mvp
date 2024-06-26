@@ -66,7 +66,7 @@ const MainCard = () => {
                 {/* <img src="https://via.placeholder.com/150" alt='gift-box' className='w-[50%]'></img> */}
             </div>
             <div className='justify-end flex m-1'>
-                <Button  onClick={() => setShowModal(true)} className="text-lg shadow-lg ">
+                <Button  onClick={() => setShowModal(true)} className="text-lg text-black">
                     시작하기
                 </Button>
             </div>
